@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import Book, { type Book as BookType } from './Book'
 
 function App() {
@@ -76,17 +77,33 @@ function App() {
     }
   ]
 
+  const [selectedBook, setSelectedBook] = useState<BookType>()
+
   return (
     <div className="bg-gray-100 min-h-screen p-4">
       <div className="max-w-5xl mx-auto">
         <h1 className="text-3xl font-bold text-center text-blue-500 mb-6">Bookorama</h1>
 
+        {selectedBook && <div className="flex justify-center mb-4">
+          <div className="w-1/3">
+            <Book
+              book={selectedBook}
+              onSelect={() => setSelectedBook(undefined)}
+              selected
+              key={selectedBook.id}
+            />
+          </div>
+        </div>}
+
         <div className="grid grid-cols-4 gap-4">
-          {books.map(book => <Book key={book.id} book={book} />)}
-          <Book book={book} />
-          <Book book={book} />
-          <Book book={book} active={false} />
-          <Book book={book} />
+          {books.map(book =>
+            <Book
+              key={book.id}
+              book={book}
+              onSelect={() => setSelectedBook(selectedBook && selectedBook.id === book.id ? undefined : book)}
+              active={!selectedBook || selectedBook.id !== book.id}
+            />
+          )}
         </div>
       </div>
     </div>
