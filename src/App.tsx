@@ -75,10 +75,12 @@ export const BOOKS = [
     image: '/assets/la-peste.jpg',
   }
 ]
+export const AUTHORS = new Set(BOOKS.map(b => b.author))
 
 function App() {
   const [books, setBooks] = useState<BookType[]>(BOOKS)
   const [selectedBook, setSelectedBook] = useState<BookType>()
+  // @todo montrer l'intérêt du useMemo
 
   const handleAddBook = () => {
     const randomBook = BOOKS[Math.floor(Math.random() * BOOKS.length)]
@@ -91,6 +93,10 @@ function App() {
 
   const handleRemoveBook = (book: BookType) => {
     setBooks(books.filter(b => b.id !== book.id))
+  }
+
+  const handleUpdateBook = (localBook: BookType) => {
+    setBooks(books.map(b => b.id === localBook.id ? localBook : b))
   }
 
   return (
@@ -109,6 +115,10 @@ function App() {
                 handleRemoveBook(selectedBook)
                 setSelectedBook(undefined)
               }}
+              onSave={(localBook) => {
+                handleUpdateBook(localBook)
+                setSelectedBook(localBook)
+              }}
             />
           </div>
         </div>}
@@ -121,6 +131,7 @@ function App() {
               onSelect={() => setSelectedBook(selectedBook && selectedBook.id === book.id ? undefined : book)}
               active={!selectedBook || selectedBook.id !== book.id}
               onRemove={() => handleRemoveBook(book)}
+              onSave={handleUpdateBook}
             />
           )}
         </div>
