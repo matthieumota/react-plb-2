@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Book, { type Book as BookType } from './Book'
 import Button from './Button'
 import BookForm from './BookForm'
 import Clock from './Clock'
+import axios from 'axios'
 
 let nextId = 11
 export const BOOKS = [
@@ -80,7 +81,9 @@ export const BOOKS = [
 export const AUTHORS = new Set(BOOKS.map(b => b.author))
 
 function App() {
-  const [books, setBooks] = useState<BookType[]>(BOOKS)
+  const [books, setBooks] = useState<BookType[]>([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string>()
   const [selectedBook, setSelectedBook] = useState<BookType>()
   // @todo montrer l'intérêt du useMemo
   const [showForm, setShowForm] = useState(false)
@@ -91,6 +94,24 @@ function App() {
     year: 0,
     image: '',
   })
+
+  useEffect(() => {
+    const loadBooks = async () => {
+      setLoading(true)
+      await new Promise(resolve => setTimeout(resolve, 500))
+
+      try {
+        const response = await axios.get('http://localhost:3000/books')
+        setBooks(response.data)
+      } catch (error: any) {
+        setError(error.message)
+      }
+
+      setLoading(false)
+    }
+
+    loadBooks()
+  }, [])
 
   const toggleForm = () => {
     setShowForm(!showForm)
@@ -136,6 +157,20 @@ function App() {
             />
           </div>
         </div>}
+
+        {loading && (
+          <div className="flex justify-center items-center py-10">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500 border-opacity-50"></div>
+            <span className="ml-4 text-blue-500 font-medium">Chargement des livres...</span>
+          </div>
+        )}
+
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative max-w-xl mx-auto mb-4">
+            <strong className="font-bold">Erreur :</strong>
+            <span className="block sm:inline ml-1">{error}</span>
+          </div>
+        )}
 
         <div className="grid grid-cols-4 gap-4">
           {books.map(book =>
