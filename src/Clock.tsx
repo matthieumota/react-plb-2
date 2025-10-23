@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-function Clock({ onTest }) {
+function Clock({ onTest }: { onTest: () => void }) {
   const [date, setDate] = useState(new Date())
 
   useEffect(() => {
