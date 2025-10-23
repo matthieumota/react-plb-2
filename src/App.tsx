@@ -2,6 +2,7 @@ import { useState } from 'react'
 import Book, { type Book as BookType } from './Book'
 import Button from './Button'
 import BookForm from './BookForm'
+import Clock from './Clock'
 
 let nextId = 11
 export const BOOKS = [
@@ -156,6 +157,9 @@ function App() {
         </div>}
 
         {showForm && <div className="mt-4">
+          <Clock
+            onTest={() => console.log('test')}
+          />
           <pre>{JSON.stringify(newBook, null, 2)}</pre>
           <BookForm
             book={newBook}
