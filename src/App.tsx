@@ -85,6 +85,7 @@ function App() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string>()
   const [selectedBook, setSelectedBook] = useState<BookType>()
+  const [selectedBookLoading, setSelectedBookLoading] = useState(false)
   // @todo montrer l'intérêt du useMemo
   const [showForm, setShowForm] = useState(false)
   const [newBook, setNewBook] = useState<BookType>({
@@ -112,6 +113,29 @@ function App() {
 
     loadBooks()
   }, [])
+
+  // Créer un useEffect qui se déclenche si selectedBook change...
+  // Vérifier que le selectedBook est défini...
+  // S'il existe, on fait un get sur http://localhost:3000/books/8 où 8 est l'id du selectedBook
+  // Faire un console.log du livre
+  // Au mieux, remplacer selectedBook par les données de l'api et ajouter un skeleton en chargement
+  useEffect(() => {
+    console.log('selectedBook', selectedBook)
+    if (!selectedBook) return
+
+    const loadBook = async (id: number) => {
+      setSelectedBookLoading(true)
+      await new Promise(resolve => setTimeout(resolve, 500))
+      try {
+        const response = await axios.get(`http://localhost:3000/books/${id}`)
+        console.log(response.data)
+        setSelectedBook(response.data)
+      } catch {}
+      setSelectedBookLoading(false)
+    }
+
+    loadBook(selectedBook.id)
+  }, [selectedBook?.id])
 
   const toggleForm = () => {
     setShowForm(!showForm)
@@ -141,7 +165,16 @@ function App() {
 
         {selectedBook && <div className="flex justify-center mb-4">
           <div className="w-1/3">
-            <Book
+            {selectedBookLoading ? <>
+              <div className="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-200">
+                <div className="h-64 bg-gray-200 w-full animate-pulse"></div>
+                <div className="p-4">
+                  <div className="h-6 bg-gray-200 w-28 animate-pulse rounded-lg mb-2"></div>
+                  <div className="h-4 bg-gray-200 w-32 animate-pulse rounded-lg mb-2"></div>
+                  <div className="h-4 bg-gray-200 w-24 animate-pulse rounded-lg mb-2"></div>
+                </div>
+              </div>
+            </> : <Book
               book={selectedBook}
               onSelect={() => setSelectedBook(undefined)}
               selected
@@ -154,7 +187,7 @@ function App() {
                 handleUpdateBook(localBook)
                 setSelectedBook(localBook)
               }}
-            />
+            />}
           </div>
         </div>}
 
