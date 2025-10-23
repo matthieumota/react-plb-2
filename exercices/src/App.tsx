@@ -1,7 +1,9 @@
 import Author, { type Author as AuthorType } from './Author'
 import Counter from './Counter'
+import EventListenerChallenge from './EventListenerChallenge'
 import Movie, { type Movie as MovieType } from './Movie'
 import { MovieList, Toto } from './MovieList'
+import StateChallenge from './StateChallenge'
 
 function App() {
   const author: AuthorType = {
@@ -60,6 +62,12 @@ function App() {
       <h2>Exercice Counter</h2>
       <Counter />
       <Counter initialValue={5} maxValue={10} />
+
+      <h2>Exercice State Challenge</h2>
+      <StateChallenge />
+
+      <h2>Exercice Event Listener Challenge</h2>
+      <EventListenerChallenge />
     </div>
   )
 }
