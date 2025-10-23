@@ -1,4 +1,5 @@
 import Author, { type Author as AuthorType } from './Author'
+import Counter from './Counter'
 import Movie, { type Movie as MovieType } from './Movie'
 import { MovieList, Toto } from './MovieList'
 
@@ -55,6 +56,10 @@ function App() {
       <MovieList movies={movies} />
       <MovieList movies={movies.filter(m => m.note >= 8)} />
       <Toto />
+
+      <h2>Exercice Counter</h2>
+      <Counter />
+      <Counter initialValue={5} maxValue={10} />
     </div>
   )
 }
