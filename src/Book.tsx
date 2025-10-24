@@ -2,6 +2,7 @@ import { useState } from 'react'
 import Button from './Button'
 import { AUTHORS } from './App'
 import { cn } from './utils'
+import { NavLink, useNavigate } from 'react-router'
 
 export type Book = {
   id: number
@@ -21,6 +22,7 @@ type BookProps = {
 }
 
 function Book({ book, active = true, onSelect, selected = false, onRemove, onSave }: BookProps) {
+  const navigate = useNavigate()
   const [like, setLike] = useState(0)
   const [editMode, setEditMode] = useState(false)
   const [localBook, setLocalBook] = useState(book)
@@ -170,6 +172,12 @@ function Book({ book, active = true, onSelect, selected = false, onRemove, onSav
         <Button title="Modifier" onClick={toggleEdit}>
           Modifier
         </Button>
+        <Button title="Visiter" onClick={() => navigate(`/livre/${book.id}`)}>
+          Visiter
+        </Button>
+        <NavLink to={`/livre/${book.id}`} className="bg-blue-500 hover:bg-blue-800 text-white py-1.5 px-4 rounded-md duration-300">
+          Visiter
+        </NavLink>
       </div>
     </div>
   )

@@ -5,10 +5,13 @@ import BookForm from '../BookForm'
 import Clock from '../Clock'
 import axios from 'axios'
 import { AUTHORS } from '../App'
+import { useSearchParams } from 'react-router'
 
 let nextId = 11
 
 function Home() {
+  const [searchParams, setSearchParams] = useSearchParams()
+  const search = searchParams.get('search') || ''
   const [books, setBooks] = useState<BookType[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string>()
@@ -150,8 +153,16 @@ function Home() {
         </div>
       )}
 
+      <input
+        value={search}
+        onChange={(e) => {
+          searchParams.set('search', e.target.value)
+          setSearchParams(searchParams)
+        }}
+      />
+
       <div className="grid grid-cols-4 gap-4">
-        {books.map(book =>
+        {books.filter(b => b.title.toLowerCase().includes(search.toLowerCase())).map(book =>
           <Book
             key={book.id}
             book={book}
