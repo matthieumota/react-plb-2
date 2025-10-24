@@ -1,4 +1,6 @@
 import { NavLink, Outlet } from 'react-router'
+import { useUser } from './contexts/UserContext'
+import Button from './Button'
 
 export const BOOKS = [
   {
@@ -75,13 +77,24 @@ export const BOOKS = [
 export const AUTHORS = new Set(BOOKS.map(b => b.author))
 
 function App() {
+  const { user, login, logout } = useUser()
+
   return (
     <div className="bg-gray-100 min-h-screen p-4">
       <div className="max-w-5xl mx-auto">
-        <nav className="">
-          <NavLink to="/" className={({ isActive }) => isActive ? 'text-blue-500' : ''}>Accueil</NavLink>
-          <NavLink to="/a-propos" className={({ isActive }) => isActive ? 'text-blue-500' : ''}>A propos</NavLink>
-        </nav>
+        <div className="flex justify-between">
+          <nav className="">
+            <NavLink to="/" className={({ isActive }) => isActive ? 'text-blue-500' : ''}>Accueil</NavLink>
+            <NavLink to="/a-propos" className={({ isActive }) => isActive ? 'text-blue-500' : ''}>A propos</NavLink>
+          </nav>
+
+          {user ? <div>
+            <h1>Salut {user.name}</h1>
+            <Button onClick={logout}>Logout</Button>
+          </div> : <Button onClick={() => login('Fiorella')}>
+            Login
+          </Button>}
+        </div>
 
         <Outlet />
 

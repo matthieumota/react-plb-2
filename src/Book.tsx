@@ -3,6 +3,7 @@ import Button from './Button'
 import { AUTHORS } from './App'
 import { cn } from './utils'
 import { NavLink, useNavigate } from 'react-router'
+import { useUser } from './contexts/UserContext'
 
 export type Book = {
   id: number
@@ -23,6 +24,7 @@ type BookProps = {
 
 function Book({ book, active = true, onSelect, selected = false, onRemove, onSave }: BookProps) {
   const navigate = useNavigate()
+  const { user } = useUser()
   const [like, setLike] = useState(0)
   const [editMode, setEditMode] = useState(false)
   const [localBook, setLocalBook] = useState(book)
@@ -166,12 +168,14 @@ function Book({ book, active = true, onSelect, selected = false, onRemove, onSav
           ❤️‍🔥
           {like > 0 && <>({like})</>}
         </Button>
-        <Button title="Supprimer" onClick={handleRemove} className="bg-red-500 hover:bg-red-800">
-          🗑️
-        </Button>
-        <Button title="Modifier" onClick={toggleEdit}>
-          Modifier
-        </Button>
+        {user && <>
+          <Button title="Supprimer" onClick={handleRemove} className="bg-red-500 hover:bg-red-800">
+            🗑️
+          </Button>
+          <Button title="Modifier" onClick={toggleEdit}>
+            Modifier
+          </Button>
+        </>}
         <Button title="Visiter" onClick={() => navigate(`/livre/${book.id}`)}>
           Visiter
         </Button>
