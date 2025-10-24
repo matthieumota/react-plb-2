@@ -84,6 +84,7 @@ function App() {
   const [books, setBooks] = useState<BookType[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string>()
+  const [selectedBookId, setSelectedBookId] = useState<number>()
   const [selectedBook, setSelectedBook] = useState<BookType>()
   const [selectedBookLoading, setSelectedBookLoading] = useState(false)
   // @todo montrer l'intérêt du useMemo
@@ -120,8 +121,8 @@ function App() {
   // Faire un console.log du livre
   // Au mieux, remplacer selectedBook par les données de l'api et ajouter un skeleton en chargement
   useEffect(() => {
-    console.log('selectedBook', selectedBook)
-    if (!selectedBook) return
+    console.log('selectedBookId', selectedBookId)
+    if (!selectedBookId) return
 
     const loadBook = async (id: number) => {
       setSelectedBookLoading(true)
@@ -134,8 +135,8 @@ function App() {
       setSelectedBookLoading(false)
     }
 
-    loadBook(selectedBook.id)
-  }, [selectedBook?.id])
+    loadBook(selectedBookId)
+  }, [selectedBookId])
 
   const toggleForm = () => {
     setShowForm(!showForm)
@@ -176,16 +177,16 @@ function App() {
               </div>
             </> : <Book
               book={selectedBook}
-              onSelect={() => setSelectedBook(undefined)}
+              onSelect={() => setSelectedBookId(Number(selectedBook.id) + 1)}
               selected
               key={selectedBook.id}
               onRemove={() => {
                 handleRemoveBook(selectedBook)
-                setSelectedBook(undefined)
+                setSelectedBookId(undefined)
               }}
               onSave={(localBook) => {
                 handleUpdateBook(localBook)
-                setSelectedBook(localBook)
+                setSelectedBookId(localBook.id)
               }}
             />}
           </div>
@@ -210,7 +211,7 @@ function App() {
             <Book
               key={book.id}
               book={book}
-              onSelect={() => setSelectedBook(selectedBook && selectedBook.id === book.id ? undefined : book)}
+              onSelect={() => setSelectedBookId(selectedBook && selectedBook.id === book.id ? undefined : book.id)}
               active={!selectedBook || selectedBook.id !== book.id}
               onRemove={() => handleRemoveBook(book)}
               onSave={handleUpdateBook}
