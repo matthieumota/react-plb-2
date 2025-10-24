@@ -56,7 +56,7 @@ function Book({ book, active = true, onSelect, selected = false, onRemove, onSav
     setLocalBook({ ...localBook, [event.target.name]: event.target.value })
   }
 
-  const handleSave = (event: React.FormEvent) => {
+  const handleSave = async (event: React.FormEvent) => {
     event.preventDefault()
 
     const errors: Record<string, string> = {}

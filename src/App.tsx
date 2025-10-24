@@ -142,21 +142,38 @@ function App() {
     setShowForm(!showForm)
   }
 
-  const handleAddBook = () => {
-    setBooks([
-      ...books,
-      { ...newBook, id: nextId++ }
-    ])
-    setNewBook({ id: 0, title: '', author: '', year: 0, image: '' })
-    toggleForm()
+  const handleAddBook = async () => {
+    try {
+      // @todo mettre un loader sur le bouton le temps que la requete soit faite
+      await new Promise(resolve => setTimeout(resolve, 2000))
+      const response = await axios.post('http://localhost:3000/books', { ...newBook, id: (nextId++).toString() })
+      setBooks(prevBooks => [
+        ...prevBooks,
+        response.data
+      ])
+      setNewBook({ id: 0, title: '', author: '', year: 0, image: '' })
+      toggleForm()
+    } catch (err: any) {
+      setError('Erreur lors de l’ajout du livre : ' + err.message)
+    }
   }
 
-  const handleRemoveBook = (book: BookType) => {
-    setBooks(books.filter(b => b.id !== book.id))
+  const handleRemoveBook = async (book: BookType) => {
+    try {
+      await axios.delete(`http://localhost:3000/books/${book.id}`)
+      setBooks(books.filter(b => b.id !== book.id))
+    } catch (err: any) {
+      setError('Erreur lors de la suppression : ' + err.message)
+    }
   }
 
-  const handleUpdateBook = (localBook: BookType) => {
-    setBooks(books.map(b => b.id === localBook.id ? localBook : b))
+  const handleUpdateBook = async (localBook: BookType) => {
+    try {
+      await axios.put(`http://localhost:3000/books/${localBook.id}`, localBook)
+      setBooks(books.map(b => b.id === localBook.id ? localBook : b))
+    } catch (err: any) {
+      setError('Erreur lors de la mise à jour : ' + err.message)
+    }
   }
 
   return (
