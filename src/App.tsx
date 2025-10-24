@@ -4,6 +4,7 @@ import Button from './Button'
 import BookForm from './BookForm'
 import Clock from './Clock'
 import axios from 'axios'
+import { Outlet } from 'react-router'
 
 let nextId = 11
 export const BOOKS = [
@@ -179,6 +180,8 @@ function App() {
   return (
     <div className="bg-gray-100 min-h-screen p-4">
       <div className="max-w-5xl mx-auto">
+        <Outlet />
+
         <h1 className="text-3xl font-bold text-center text-blue-500 mb-6">Bookorama</h1>
 
         {selectedBook && <div className="flex justify-center mb-4">
