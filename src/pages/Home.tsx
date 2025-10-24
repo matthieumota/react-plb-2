@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Book, { type Book as BookType } from '../Book'
 import Button from '../Button'
 import BookForm from '../BookForm'
@@ -10,8 +10,9 @@ import { useSearchParams } from 'react-router'
 let nextId = 11
 
 function Home() {
+  console.log(import.meta.env.VITE_API_URL)
   const [searchParams, setSearchParams] = useSearchParams()
-  const search = searchParams.get('search') || ''
+  const search = useMemo(() => searchParams.get('search') || '', [searchParams])
   const [books, setBooks] = useState<BookType[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string>()
@@ -19,6 +20,7 @@ function Home() {
   const [selectedBook, setSelectedBook] = useState<BookType>()
   const [selectedBookLoading, setSelectedBookLoading] = useState(false)
   // @todo montrer l'intérêt du useMemo
+  const selectedBookMemo = useMemo(() => books.find(b => b.id === selectedBookId), [selectedBookId])
   const [showForm, setShowForm] = useState(false)
   const [newBook, setNewBook] = useState<BookType>({
     id: 0,
@@ -111,6 +113,7 @@ function Home() {
     <>
       <h1 className="text-3xl font-bold text-center text-blue-500 mb-6">Bookorama</h1>
 
+      {JSON.stringify(selectedBookMemo)}
       {selectedBook && <div className="flex justify-center mb-4">
         <div className="w-1/3">
           {selectedBookLoading ? <>

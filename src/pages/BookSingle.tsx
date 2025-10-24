@@ -12,7 +12,7 @@ function BookSingle() {
   useEffect(() => {
     const loadBook = async () => {
         try {
-            const response = await axios.get(`http://localhost:3000/books/${params.id}`)
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/books/${params.id}`)
             setBook(response.data)
         } catch (error: any) {
             // On affiche une 404 ou on redirige
