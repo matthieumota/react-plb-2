@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router'
+import { NavLink, Outlet } from 'react-router'
 
 export const BOOKS = [
   {
@@ -78,7 +78,16 @@ function App() {
   return (
     <div className="bg-gray-100 min-h-screen p-4">
       <div className="max-w-5xl mx-auto">
+        <nav className="">
+          <NavLink to="/" className={({ isActive }) => isActive ? 'text-blue-500' : ''}>Accueil</NavLink>
+          <NavLink to="/a-propos" className={({ isActive }) => isActive ? 'text-blue-500' : ''}>A propos</NavLink>
+        </nav>
+
         <Outlet />
+
+        <footer className="text-center">
+          Copyright &copy; {new Date().getFullYear()}
+        </footer>
       </div>
     </div>
   )
